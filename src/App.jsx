@@ -6,6 +6,7 @@ function App() {
   const [lista, setLista] = useState([]);
   const [edit, setEdit] = useState(false);
   const [idEdit, setEditId] = useState('');
+  const [error, setError] = useState(null)
 
   
 
@@ -16,9 +17,11 @@ function App() {
     e.preventDefault();
 
     if (!tarea.trim()) {
-      console.log("esta vacio");
+      console.log("Elemento vacio");
+      setError('Error, Escriba una tarea.')
       return;
     }
+    setError(null)
     console.log(tarea);
     setLista([
       ...lista,
@@ -49,9 +52,13 @@ function App() {
     e.preventDefault();
     console.log(tarea)
     if (!tarea.trim()) {
-      console.log("esta vacio");
+      console.log("Elemento vacio");
+      setError('Error, Escriba una tarea.')
+
       return;
     }
+    setError(null)
+
     const arrayEditado = lista.map
     (item => item.id === idEdit ? {idEdit:idEdit, description:tarea} : item
       )
@@ -65,13 +72,15 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center">Hello World</h1>
+      <h1 className="text-center">CRUD</h1>
       <hr />
       <div className="row">
         <div className="col-8">
           <h4 className="text-center">Lista de Tareas</h4>
           <ul className="list-group">
-            {lista.map((tarea) => (
+            {
+            (lista.length < 1 ? (<h1>No hay tareas</h1>) :
+            lista.map((tarea) => (
               <li key={tarea.id} className="list-group-item">
                 <span className="lead">
                   <strong>{tarea.description}</strong>
@@ -89,15 +98,20 @@ function App() {
                 Editar
                 </button>
               </li>
-            ))}
+            )))
+            }
           </ul>
         </div>
         <div className="col-4">
           <h4 className="text-center">
             {
               edit ? 'Editar Tarea' : 'Agregar Tarea'
-            }
+            }            
           </h4>
+          {
+            error ? <span className="text-danger">{error}</span> : null
+
+          }
           <form onSubmit={edit ? updatedTask : addTaks}>
             <input
               className="form-control mb-2"
